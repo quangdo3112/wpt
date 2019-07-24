@@ -146,7 +146,12 @@ function ReferrerPolicyTestCase(scenario, testDescription, sanityChecker) {
         subresource.url += "&-1";
         return invokeRequest(subresource, [])
           .then(result => checkResult(location.href, result))
-          .finally(_ => history.back());
+          .finally(_ => {
+              history.back();
+              return new Promise(resolve => {
+                  window.addEventListener('popstate', resolve, {once: true});
+                });
+            });
       }, "`Referer` header with length < 4k is not stripped to an origin.");
 
       promise_test(_ => {
@@ -157,7 +162,12 @@ function ReferrerPolicyTestCase(scenario, testDescription, sanityChecker) {
         subresource.url += "&0";
         return invokeRequest(subresource, [])
           .then(result => checkResult(expectedReferrer, result))
-          .finally(_ => history.back());
+          .finally(_ => {
+              history.back();
+              return new Promise(resolve => {
+                  window.addEventListener('popstate', resolve, {once: true});
+                });
+            });
       }, "`Referer` header with length == 4k is not stripped to an origin.");
 
       promise_test(_ => {
@@ -168,7 +178,12 @@ function ReferrerPolicyTestCase(scenario, testDescription, sanityChecker) {
         subresource.url += "&+1";
         return invokeRequest(subresource, [])
           .then(result => checkResult(originString, result))
-          .finally(_ => history.back());
+          .finally(_ => {
+              history.back();
+              return new Promise(resolve => {
+                  window.addEventListener('popstate', resolve, {once: true});
+                });
+            });
       }, "`Referer` header with length > 4k is stripped to an origin.");
     }
 
